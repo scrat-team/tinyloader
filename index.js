@@ -63,9 +63,14 @@ function tinyLoader(deps, done, options) {
         scripts[index] = code
         if (!--count) {
             // excute
+            var code = '';
             scripts.forEach(function(s) {
-                eval(s)
-            }.bind(window)) // bind this to window for lib execution
+                code += s;
+            })
+            // Don't use eval or new Function in UC (9.7.6 ~ 9.8.5)
+            var s = document.createElement('script')
+            s.appendChild(document.createTextNode(code))
+            document.head.appendChild(s)
             done && done()
         }
     }
